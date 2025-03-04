@@ -1,56 +1,54 @@
-<div class="container-fluid">
-  <h4>Pesquisar Imagem</h4>
-  <!-- Filtros de pesquisa -->
-  <div class="controle-tabela row my-2">
-    <div class="col-lg-3 col-10">
+<div class="container-fluid py-3">
+  <h4 class="text-center mb-3">Pesquisar Imagem</h4>
+  <div class="row g-3 justify-content-center">
+    <!-- Filtro Desenho -->
+    <div class="col-12 col-md-6 col-lg-3">
       <label for="filtro-desenho" class="form-label">Desenho</label>
       <div class="input-group">
-        <input [(ngModel)]="desenho" type="text"
-          tooltip="Digite pelo menos 3 caracteres." placement="right"
-          class="form-control">
-        <button (click)="searchImg('desenho')" type="button"
-          class="btn btn-outline-secondary">
+        <input [(ngModel)]="desenho" type="text" id="filtro-desenho"
+          class="form-control" placeholder="Digite pelo menos 3 caracteres"
+          ngbTooltip="Digite pelo menos 3 caracteres" placement="right">
+        <button (click)="searchImg('desenho')" type="button" class="btn btn-outline-secondary">
           <i class="bi bi-search"></i>
         </button>
       </div>
     </div>
-    <div class="col-lg-3 col-10">
-      <label for="filtro-matricula" class="form-label">Matricula</label>
+
+    <!-- Filtro Matrícula -->
+    <div class="col-12 col-md-6 col-lg-3">
+      <label for="filtro-matricula" class="form-label">Matrícula</label>
       <div class="input-group">
-        <input [(ngModel)]="matricula" type="text"
-          tooltip="Digite pelo menos 3 caracteres." placement="right"
-          class="form-control" id="filtro-cliente-fornecedor">
-        <button (click)="searchImg('matricula')" type="button"
-          class="btn btn-outline-secondary">
+        <input [(ngModel)]="matricula" type="text" id="filtro-matricula"
+          class="form-control" placeholder="Digite pelo menos 3 caracteres"
+          ngbTooltip="Digite pelo menos 3 caracteres" placement="right">
+        <button (click)="searchImg('matricula')" type="button" class="btn btn-outline-secondary">
           <i class="bi bi-search"></i>
         </button>
       </div>
     </div>
-    <div>
-      <img src="C:\Users\Kassiel Moreira\OneDrive - Conecsa Automação\Imagens\Screenshots\screenshot_2025_02_17_16_45_28.png" alt="">
+
+    <!-- Imagem -->
+    <div *ngIf="currentImg" class="col-12 text-center mt-3">
+      <img [src]="currentImg" alt="Imagem" class="img-fluid">
     </div>
-    <!-- Modal -->
-    <div class="modal fade" [ngClass]="{'show d-block': showModal}"
-      tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-      [attr.aria-hidden]="!showModal">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLongTitle">{{ modalTitle }}
-            </h5>
-          </div>
-          <div class="modal-body">
-            {{ modalMessage }}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary"
-              (click)="closeModal()">Fechar</button>
-          </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" [ngClass]="{'show d-block': showModal}" tabindex="-1" role="dialog"
+    [attr.aria-hidden]="!showModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ modalTitle }}</h5>
+        </div>
+        <div class="modal-body">
+          <p>{{ modalMessage }}</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Fechar</button>
         </div>
       </div>
     </div>
-    <!-- Fundo escurecido do modal -->
-    <div class="modal-backdrop fade show" *ngIf="showModal"
-      (click)="closeModal()"></div>
   </div>
+  <div class="modal-backdrop fade show" *ngIf="showModal" (click)="closeModal()"></div>
 </div>

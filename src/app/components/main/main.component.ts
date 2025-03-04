@@ -33,13 +33,7 @@ export class MainComponent implements OnInit {
         throw new Error("Iframe não encontrado");
       }
       const rect = iframe.getBoundingClientRect();
-      const captureRect = {
-        x: 410,
-        y: 200,
-        width: 300,
-        height: 300
-      };
-      const imgData = await window.electron.capturePage(captureRect);
+      const imgData = await window.electron.capturePage(rect);
       const fileName = `${Date.now()}.png`;
       window.electron.sendCaptureResponse({ fileName, imgData }); // Envia apenas fileName e imgData
     } catch (err: any) {

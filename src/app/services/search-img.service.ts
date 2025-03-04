@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { SearchResponse } from '../interface/search-response';
 
 export type Filter = {
   type: string;
@@ -15,6 +16,6 @@ export class SearchImgService {
   constructor(private http: HttpClient) { }
 
   searchImg(filter: Filter) {
-    return this.http.post(this.url, { filter });
+    return this.http.post<SearchResponse>(this.url, { filter });
   }
 }

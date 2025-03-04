@@ -8,12 +8,14 @@ let mainWindow;
 const appServer = express();
 appServer.use(express.json({ strict: false }));
 
+appServer.use(express.static(path.join(__dirname, "pictures")));
+
 function saveImage(fileName, imgData, callback) {
-  const filePath = path.join("pictures", fileName);
+  const picturesDir = path.join(__dirname, 'pictures');
+  const filePath = path.join(picturesDir, fileName);
 
   fs.mkdir("pictures", { recursive: true }, (err) => {
     if (err) {
-      console.error("Erro ao criar pasta:", err);
       if (callback) {
         callback.status(500).send("Erro ao salvar imagem");
       }
@@ -45,8 +47,9 @@ function saveImage(fileName, imgData, callback) {
 
 app.whenReady().then(() => {
   mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 768,
+    width: 1980,
+    height: 1080,
+    fullscreen: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,

@@ -11,11 +11,13 @@ import { SearchImgService } from '../../services/search-img.service';
   styleUrl: './search-image.component.scss',
 })
 export class SearchImageComponent {
+  currentImg!: string;
   matricula!: string;
   desenho!: string;
   modalTitle: string = '';
   modalMessage: string = '';
   showModal: boolean = false;
+  private electronBaseUrl = 'http://localhost:3000';
 
   constructor(private searchService: SearchImgService) {}
   searchImg(type: string) {
@@ -27,7 +29,10 @@ export class SearchImageComponent {
     }
     this.searchService.searchImg({ type: type, value: searchValue }).subscribe({
       next: (response) => {
-
+        if (response) {
+          this.currentImg = `${this.electronBaseUrl}/${response.name}`;
+          console.log(this.currentImg);
+        }
       },
       error: (err) => {
         this.modalTitle = 'Erro';

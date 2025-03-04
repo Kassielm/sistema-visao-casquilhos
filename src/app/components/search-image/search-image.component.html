@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <h4>Pesquisar Imagem</h4>
+  <!-- Filtros de pesquisa -->
+  <div class="controle-tabela row my-2">
+    <div class="col-lg-3 col-10">
+      <label for="filtro-desenho" class="form-label">Desenho</label>
+      <div class="input-group">
+        <input [(ngModel)]="desenho" type="text"
+          tooltip="Digite pelo menos 3 caracteres." placement="right"
+          class="form-control">
+        <button (click)="searchImg('desenho')" type="button"
+          class="btn btn-outline-secondary">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+    <div class="col-lg-3 col-10">
+      <label for="filtro-matricula" class="form-label">Matricula</label>
+      <div class="input-group">
+        <input [(ngModel)]="matricula" type="text"
+          tooltip="Digite pelo menos 3 caracteres." placement="right"
+          class="form-control" id="filtro-cliente-fornecedor">
+        <button (click)="searchImg('matricula')" type="button"
+          class="btn btn-outline-secondary">
+          <i class="bi bi-search"></i>
+        </button>
+      </div>
+    </div>
+    <div>
+      <img src="C:\Users\Kassiel Moreira\OneDrive - Conecsa Automação\Imagens\Screenshots\screenshot_2025_02_17_16_45_28.png" alt="">
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" [ngClass]="{'show d-block': showModal}"
+      tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+      [attr.aria-hidden]="!showModal">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLongTitle">{{ modalTitle }}
+            </h5>
+          </div>
+          <div class="modal-body">
+            {{ modalMessage }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary"
+              (click)="closeModal()">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Fundo escurecido do modal -->
+    <div class="modal-backdrop fade show" *ngIf="showModal"
+      (click)="closeModal()"></div>
+  </div>
+</div>

@@ -9,6 +9,12 @@
   transition: width 0.3s ease;
 }
 
+.sidebar img {
+  width: 100px;
+  height: auto;
+  margin-bottom: 15px;
+}
+
 .nav-link {
   cursor: pointer;
 }
@@ -24,5 +30,8 @@
   }
   .sidebar h4 {
     font-size: 1rem;
+  }
+  .sidebar img {
+    width: 60px;
   }
 }

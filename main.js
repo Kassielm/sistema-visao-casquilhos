@@ -5,12 +5,37 @@ const express = require("express");
 
 let mainWindow;
 
+// Servidor para salvar imagens, e servir diretorio de imagens
 const appServer = express();
 appServer.use(express.json({ strict: false }));
-
-appServer.use(express.static(path.join(__dirname, "pictures")));
+appServer.use("/nok", express.static(path.join(__dirname, "pictures/nok")));
+appServer.use("/ok", express.static(path.join(__dirname, "pictures/ok")));
 appServer.use(express.static(path.join(__dirname, "src/assets")));
 
+// Configuração da janela principal do Electron
+app.whenReady().then(() => {
+  mainWindow = new BrowserWindow({
+    width: 1980,
+    height: 1080,
+    fullscreen: true,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
+      contextIsolation: true,
+      webSecurity: false,
+    },
+  });
+  mainWindow.loadFile(
+    path.join(__dirname, "dist/electron-angular-capture/browser/index.html")
+  );
+
+  // Lembrar de mudar para IP
+  appServer.listen(3000, () => {
+    console.log("Servidor rodando na porta 3000");
+  });
+});
+
+// Função para salvar imagem
 function saveImage(fileName, imgData, callback, plcData) {
   const folderPath = plcData.ok === true ? "pictures/ok" : "pictures/nok";
   const picturesDir = path.join(__dirname, folderPath);
@@ -48,27 +73,7 @@ function saveImage(fileName, imgData, callback, plcData) {
   });
 }
 
-app.whenReady().then(() => {
-  mainWindow = new BrowserWindow({
-    width: 1980,
-    height: 1080,
-    fullscreen: true,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: false,
-      contextIsolation: true,
-      webSecurity: false,
-    },
-  });
-  mainWindow.loadFile(
-    path.join(__dirname, "dist/electron-angular-capture/browser/index.html")
-  );
-
-  appServer.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-  });
-});
-
+// Recebe a requisição do node e chama a função para capturar a imagem no angular
 appServer.post("/capture", (req, res) => {
   const plcData = req.body;
   ipcMain.once("capture-response", (event, response) => {
@@ -83,10 +88,10 @@ appServer.post("/capture", (req, res) => {
 
 ipcMain.handle("capture-page", async (event, rect) => {
   try {
-      const image = await mainWindow.webContents.capturePage(rect);
-      return image.toDataURL();
+    const image = await mainWindow.webContents.capturePage(rect);
+    return image.toDataURL();
   } catch (err) {
-      console.error("Erro ao capturar imagem:", err);
-      throw new Error("Erro ao capturar imagem");
+    console.error("Erro ao capturar imagem:", err);
+    throw new Error("Erro ao capturar imagem");
   }
 });

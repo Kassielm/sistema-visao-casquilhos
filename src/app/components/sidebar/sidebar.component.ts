@@ -9,5 +9,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
+  // Lembrar de mudar para IP
   logoUrl = 'http://localhost:3000/logo-conecsa-horizontal.webp';
 }

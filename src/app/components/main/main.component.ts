@@ -1,12 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
+// declaração de interface do electron
 declare global {
   interface Window {
     electron: {
-      capturePage: (rect: { x: number, y: number, width: number, height: number }) => Promise<string>;
+      capturePage: (rect: {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+      }) => Promise<string>;
       onTriggerCapture: (callback: (event: any, data: any) => void) => void;
-      sendCaptureResponse: (response: { fileName: string, imgData: string, error?: string }) => void;
+      sendCaptureResponse: (response: {
+        fileName: string;
+        imgData: string;
+        error?: string;
+      }) => void;
     };
   }
 }
@@ -16,11 +26,11 @@ declare global {
   standalone: true,
   imports: [CommonModule],
   templateUrl: './main.component.html',
-  styleUrl: './main.component.scss'
+  styleUrl: './main.component.scss',
 })
 export class MainComponent implements OnInit {
   ngOnInit() {
-    // fica escutando, e quando é chamado, chama o método captureIframe
+    // fica escutando o evento de captura
     window.electron.onTriggerCapture((event, data) => {
       this.captureIframe();
     });
@@ -28,17 +38,20 @@ export class MainComponent implements OnInit {
 
   async captureIframe() {
     try {
-      const iframe = document.getElementById("iframe");
+      const iframe = document.getElementById('iframe');
       if (!iframe) {
-        throw new Error("Iframe não encontrado");
+        throw new Error('Iframe não encontrado');
       }
       const rect = iframe.getBoundingClientRect();
       const imgData = await window.electron.capturePage(rect);
       const fileName = `${Date.now()}.png`;
-      window.electron.sendCaptureResponse({ fileName, imgData }); // Envia apenas fileName e imgData
+      window.electron.sendCaptureResponse({ fileName, imgData });
     } catch (err: any) {
-      window.electron.sendCaptureResponse({ fileName: "", imgData: "", error: err.message });
+      window.electron.sendCaptureResponse({
+        fileName: '',
+        imgData: '',
+        error: err.message,
+      });
     }
   }
 }
-

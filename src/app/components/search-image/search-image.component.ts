@@ -31,8 +31,17 @@ export class SearchImageComponent {
     this.searchService.searchImg({ type: type, value: searchValue }).subscribe({
       next: (response) => {
         if (response) {
-          const ok = response.ok === true ? 'ok' : 'nok';
-          this.currentImg = `${this.electronBaseUrl}/${ok}/${response.name}`;
+          let inspecao
+          console.log(response.inspecao);
+          if (response.inspecao === true) {
+            inspecao = 'ok'
+          } else if (response.inspecao === false) {
+            inspecao = 'nok'
+          } else {
+            inspecao = 'undefined'
+          }
+          this.currentImg = `${this.electronBaseUrl}/${inspecao}/${response.name}`;
+          console.log(this.currentImg);
         }
       },
       error: (err) => {

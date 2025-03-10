@@ -1,5 +1,5 @@
 const { app, BrowserWindow, ipcMain, nativeImage } = require("electron");
-const fs = require("fs");
+const fs = require("fs").promises;
 const path = require("path");
 const express = require("express");
 const url = require("url");
@@ -9,9 +9,9 @@ let win;
 // Servidor para salvar imagens, e servir diretorio de imagens
 const appServer = express();
 appServer.use(express.json({ strict: false }));
-appServer.use("/nok", express.static(path.join(__dirname, "pictures/nok")));
-appServer.use("/ok", express.static(path.join(__dirname, "pictures/ok")));
-appServer.use("/undefined", express.static(path.join(__dirname, "pictures/undefined")));
+appServer.use("/nok", express.static(path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "nok")));
+appServer.use("/ok", express.static(path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "ok")));
+appServer.use("/undefined", express.static(path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "undefined")));
 
 // Configuração da janela principal do Electron
 app.whenReady().then(() => {
@@ -43,53 +43,40 @@ app.whenReady().then(() => {
     })
   );
 
-  appServer.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
-  });
+  appServer.listen(3000);
 });
 
 function setFolderPath(status) {
   let folderPath = "";
   switch (status) {
     case true:
-      folderPath = 'pictures/ok';
+      folderPath = path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "ok");
       break;
     case false:
-      folderPath = 'pictures/nok';
+      folderPath = path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "nok");
       break;
     default:
-      folderPath = 'pictures/undefined';
+      folderPath = path.join(app.getPath("pictures"), "sistema-visao-casquilhos", "undefined");
   }
   return folderPath;
 }
 
-function createFolder(path) {
-  fs.mkdir(path, { recursive: true }, (result) => {
-    return result;
-  });
+async function createFolder(path) {
+  await fs.mkdir(path, { recursive: true });
 }
 
 async function writeFile(filePath, fileName, data) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(
-      filePath,
-      data.replace("data:image/png;base64,", ""),
-      "base64",
-      (err) => {
-        if (err) {
-          console.error("error ao escrever o arquivo:", err);
-          reject(err);
-        } else {
-            const resultData = {
-              fileName: fileName,
-              filePath: filePath,
-              plcData: data,
-            };
-          resolve(resultData);
-        }
-      }
-    );
-  });
+  try {
+    const cleanedData = data.replace("data:image/png;base64,", "");
+    await fs.writeFile(filePath, cleanedData, "base64");
+    return {
+      fileName: fileName,
+      filePath: filePath,
+      plcData: data,
+    };
+  } catch (error) {
+    throw error;
+  }
 }
 
 // Função para salvar imagem
@@ -97,8 +84,13 @@ async function saveImage(fileName, imgData, plcData) {
   const picturesDir = setFolderPath(plcData.inspecao)
   const filePath = path.join(picturesDir, fileName);
 
-  createFolder(picturesDir);
-  return await writeFile(filePath, fileName, imgData);
+  await createFolder(picturesDir);
+  writeFile(filePath, fileName, imgData);
+  return {
+    fileName: fileName,
+    filePath: filePath,
+    plcData: plcData,
+  };
 }
 
 // Recebe a requisição do node e chama a função para capturar a imagem no angular
@@ -113,7 +105,6 @@ appServer.post("/capture", (req, res) => {
       const result = await saveImage(fileName, imgData, plcData);
       return res.status(202).send(result);
     } catch (error) {
-      console.error("Erro ao salvar imagem:", error);
       return res.status(500).send("Erro ao salvar imagem");
     }
   });
@@ -125,7 +116,6 @@ ipcMain.handle("capture-page", async (event, rect) => {
     const image = await win.webContents.capturePage(rect);
     return image.toDataURL();
   } catch (err) {
-    console.error("Erro ao capturar imagem:", err);
     throw new Error("Erro ao capturar imagem");
   }
 });

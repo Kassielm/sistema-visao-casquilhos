@@ -31,15 +31,16 @@ export class SearchImageComponent {
     this.searchService.searchImg({ type: type, value: searchValue }).subscribe({
       next: (response) => {
         if (response) {
-          let ok
-          if (response.ok === true) {
-            ok = 'ok'
-          } else if (response.ok === false) {
-            ok = 'nok'
+          let inspecao
+          console.log(response.inspecao);
+          if (response.inspecao === true) {
+            inspecao = 'ok'
+          } else if (response.inspecao === false) {
+            inspecao = 'nok'
           } else {
-            ok = 'undefined'
+            inspecao = 'undefined'
           }
-          this.currentImg = `${this.electronBaseUrl}/${ok}/${response.name}`;
+          this.currentImg = `${this.electronBaseUrl}/${inspecao}/${response.name}`;
           console.log(this.currentImg);
         }
       },

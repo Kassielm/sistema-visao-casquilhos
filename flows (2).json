@@ -1,0 +1,327 @@
+[
+    {
+        "id": "07d09cf6a1c21000",
+        "type": "tab",
+        "label": "Print-fpt",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "12db1a9725668cff",
+        "type": "comment",
+        "z": "07d09cf6a1c21000",
+        "name": "REGISTRAR FOTO",
+        "info": "",
+        "x": 150,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "0d57f5b6a6f01349",
+        "type": "function",
+        "z": "07d09cf6a1c21000",
+        "name": "function 3",
+        "func": "if (msg.payload.BTN_REALIZAR_INSPECAO) return;\n\nconst data = msg.payload;\nif (!msg.payload.CICLO_OK && !msg.payload.CICLO_NOK) {\n    msg.payload = {\n      matricula: data.MATRICULA,\n      desenho: data.DESENHO,\n      inspecao: 'NULL'\n    };\n} else if (msg.payload.CICLO_OK && !msg.payload.CICLO_NOK) {\n    msg.payload = {\n      matricula: data.MATRICULA,\n      desenho: data.DESENHO,\n      inspecao: true\n    };\n} else {\n    msg.payload = {\n      matricula: data.MATRICULA,\n      desenho: data.DESENHO,\n      inspecao: false\n    };\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 100,
+        "wires": [
+            [
+                "14afe1aa39088b8e"
+            ]
+        ]
+    },
+    {
+        "id": "14afe1aa39088b8e",
+        "type": "http request",
+        "z": "07d09cf6a1c21000",
+        "name": "",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://localhost:3000/capture",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 550,
+        "y": 100,
+        "wires": [
+            [
+                "23b3c76a18a6c414",
+                "f205a46ee7b06b3d"
+            ]
+        ]
+    },
+    {
+        "id": "d204e0028beba430",
+        "type": "inject",
+        "z": "07d09cf6a1c21000",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"button\":true,\"ok\":true,\"desenho\":16,\"matricula\":19}",
+        "payloadType": "json",
+        "x": 90,
+        "y": 180,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9444a850153c1eb3",
+        "type": "postgresql",
+        "z": "07d09cf6a1c21000",
+        "name": "CREATE AND INSERT REGISTROS",
+        "query": "CREATE TABLE IF NOT EXISTS public.registros\n(\n    id SERIAL,\n    name TEXT,\n    path TEXT,\n    inspecao BOOLEAN,\n    desenho TEXT,\n    matricula TEXT,\n    CONSTRAINT registros_pkey PRIMARY KEY (id)\n);\n\nALTER TABLE IF EXISTS public.registros\n    OWNER to postgres;\n\nINSERT INTO public.registros(\n    name,\n    path,\n    inspecao,\n    desenho,\n    matricula\n    )\n    VALUES (\n        '{{msg.payload.fileName}}',\n        '{{msg.payload.filePath}}',\n        {{msg.payload.plcData.inspecao}},\n        '{{msg.payload.plcData.desenho}}',\n        '{{msg.payload.plcData.matricula}}'\n        )\nRETURNING id;\n",
+        "postgreSQLConfig": "6b56f42f774e9369",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 1010,
+        "y": 100,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "92456a597fd14a18",
+        "type": "http in",
+        "z": "07d09cf6a1c21000",
+        "name": "",
+        "url": "/filter",
+        "method": "post",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 280,
+        "wires": [
+            [
+                "f3ee6f1ae4609152"
+            ]
+        ]
+    },
+    {
+        "id": "f3ee6f1ae4609152",
+        "type": "function",
+        "z": "07d09cf6a1c21000",
+        "name": "function 4",
+        "func": "const type = msg.payload.filter.type;\nconst value = msg.payload.filter.value;\n\nif (!type) {\n    msg.statusCode = 400;\n    msg.payload = { error: \"Valor não informado\"};\n    return msg;\n}\n\nmsg.query = `SELECT * FROM registros WHERE ${type} = '${value}'`\n\n// msg.queryParams = [matricula];\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 280,
+        "wires": [
+            [
+                "2f918cc67a16c1e6"
+            ]
+        ]
+    },
+    {
+        "id": "2f918cc67a16c1e6",
+        "type": "postgresql",
+        "z": "07d09cf6a1c21000",
+        "name": "GET IMAGE FROM MATRICULA",
+        "query": "",
+        "postgreSQLConfig": "6b56f42f774e9369",
+        "split": false,
+        "rowsPerMsg": 1,
+        "outputs": 1,
+        "x": 560,
+        "y": 280,
+        "wires": [
+            [
+                "353b60352c664dcf"
+            ]
+        ]
+    },
+    {
+        "id": "353b60352c664dcf",
+        "type": "function",
+        "z": "07d09cf6a1c21000",
+        "name": "function 5",
+        "func": "if (msg.payload && msg.payload.length > 0) {\n    msg.payload = msg.payload[0];\n    msg.statusCode = 200;\n} else {\n    msg.payload = { error: \"Registro não encontrado\" };\n    msg.statusCode = 404;\n}\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 800,
+        "y": 280,
+        "wires": [
+            [
+                "82d18c2f89a1b472"
+            ]
+        ]
+    },
+    {
+        "id": "82d18c2f89a1b472",
+        "type": "http response",
+        "z": "07d09cf6a1c21000",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 950,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "7b42771a31e99298",
+        "type": "comment",
+        "z": "07d09cf6a1c21000",
+        "name": "OBTEM UMA FOTO UNICA",
+        "info": "",
+        "x": 140,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "1773c11e4049aa4b",
+        "type": "s7 in",
+        "z": "07d09cf6a1c21000",
+        "endpoint": "d57e86f8b1178eba",
+        "mode": "all",
+        "variable": "",
+        "diff": true,
+        "name": "",
+        "x": 130,
+        "y": 100,
+        "wires": [
+            [
+                "0d57f5b6a6f01349"
+            ]
+        ]
+    },
+    {
+        "id": "f205a46ee7b06b3d",
+        "type": "debug",
+        "z": "07d09cf6a1c21000",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "true",
+        "targetType": "full",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "23b3c76a18a6c414",
+        "type": "function",
+        "z": "07d09cf6a1c21000",
+        "name": "function 1",
+        "func": "if (msg.statusCode !== 202) return;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "9444a850153c1eb3"
+            ]
+        ]
+    },
+    {
+        "id": "6b56f42f774e9369",
+        "type": "postgreSQLConfig",
+        "name": "",
+        "host": "localhost",
+        "hostFieldType": "str",
+        "port": "5432",
+        "portFieldType": "num",
+        "database": "postgres",
+        "databaseFieldType": "str",
+        "ssl": "false",
+        "sslFieldType": "bool",
+        "applicationName": "",
+        "applicationNameType": "str",
+        "max": "10",
+        "maxFieldType": "num",
+        "idle": "1000",
+        "idleFieldType": "num",
+        "connectionTimeout": "10000",
+        "connectionTimeoutFieldType": "num",
+        "user": "postgres",
+        "userFieldType": "str",
+        "password": "postgres",
+        "passwordFieldType": "str"
+    },
+    {
+        "id": "d57e86f8b1178eba",
+        "type": "s7 endpoint",
+        "transport": "iso-on-tcp",
+        "address": "172.18.176.220",
+        "port": "102",
+        "rack": "0",
+        "slot": "1",
+        "localtsaphi": "01",
+        "localtsaplo": "00",
+        "remotetsaphi": "01",
+        "remotetsaplo": "00",
+        "connmode": "rack-slot",
+        "adapter": "",
+        "busaddr": 2,
+        "cycletime": 1000,
+        "timeout": 2000,
+        "name": "",
+        "vartable": [
+            {
+                "addr": "DB2,S0.11",
+                "name": "MATRICULA"
+            },
+            {
+                "addr": "DB2,S14.15",
+                "name": "DESENHO"
+            },
+            {
+                "addr": "DB2,X50.0",
+                "name": "BTN_REALIZAR_INSPECAO"
+            },
+            {
+                "addr": "DB2,X100.0",
+                "name": "CICLO_OK"
+            },
+            {
+                "addr": "DB2,X100.1",
+                "name": "CICLO_NOK"
+            }
+        ]
+    }
+]

@@ -31,8 +31,16 @@ export class SearchImageComponent {
     this.searchService.searchImg({ type: type, value: searchValue }).subscribe({
       next: (response) => {
         if (response) {
-          const ok = response.ok === true ? 'ok' : 'nok';
+          let ok
+          if (response.ok === true) {
+            ok = 'ok'
+          } else if (response.ok === false) {
+            ok = 'nok'
+          } else {
+            ok = 'undefined'
+          }
           this.currentImg = `${this.electronBaseUrl}/${ok}/${response.name}`;
+          console.log(this.currentImg);
         }
       },
       error: (err) => {

@@ -5,3 +5,13 @@ contextBridge.exposeInMainWorld("electron", {
     onTriggerCapture: (callback) => ipcRenderer.on("trigger-capture", callback),
     sendCaptureResponse: (response) => ipcRenderer.send("capture-response", response)
 });
+
+window.addEventListener("DOMContentLoaded", () => {
+  var replaceText = function (selector, text) {
+    var element = document.getElementById(selector);
+    if (element) element.innerText = text;
+  };
+  for (const type of ["chrome", "node", "electron"]) {
+    replaceText(`${type}-version`, process.versions[type]);
+  }
+});

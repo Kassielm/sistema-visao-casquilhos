@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "electron-angular-capture": {
+    "sistema-visao-casquilhos": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -39,7 +39,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/electron-angular-capture",
+            "outputPath": "dist/sistema-visao-casquilhos",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -93,10 +93,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "electron-angular-capture:build:production"
+              "buildTarget": "sistema-visao-casquilhos:build:production"
             },
             "development": {
-              "buildTarget": "electron-angular-capture:build:development"
+              "buildTarget": "sistema-visao-casquilhos:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -128,5 +128,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

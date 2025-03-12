@@ -15,13 +15,6 @@ appServer.use("/undefined", express.static(path.join(app.getPath("pictures"), "s
 
 // Configuração da janela principal do Electron
 app.whenReady().then(() => {
-  const iconPath = path.join(__dirname, "favicon.ico");
-  icon = nativeImage.createFromPath(iconPath);
-
-  if (app.dock) {
-    app.dock.setIcon(icon);
-  }
-
   win = new BrowserWindow({
     width: 1980,
     height: 1080,

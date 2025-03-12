@@ -4,34 +4,12 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100px;
+  width: 200px;
   border-right: 1px solid #dee2e6;
   transition: width 0.3s ease;
 }
 
 .main-content {
-  margin-left: 170px;
+  margin-left: 200px;
   padding: 20px;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 80px;
-  }
-  .main-content {
-    margin-left: 80px;
-  }
-}
-
-@media (max-width: 576px) {
-  .sidebar {
-    position: static;
-    width: 100%;
-    min-height: auto;
-    border-right: none;
-    border-bottom: 1px solid #dee2e6;
-  }
-  .main-content {
-    margin-left: 0;
-  }
 }

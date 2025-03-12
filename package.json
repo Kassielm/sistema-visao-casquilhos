@@ -16,8 +16,7 @@
       "dist/sistema-visao-casquilhos/**/*",
       "main.js",
       "preload.js",
-      "package.json",
-      "favicon.ico"
+      "package.json"
     ]
   },
   "win": {

@@ -1,11 +1,10 @@
 .sidebar {
   min-height: 100vh;
-  padding: 20px;
-  position: fixed;
+  position: relative;
   top: 0;
   left: 0;
 }
 
 .main-content {
-  margin-left: 250px;
+  position: relative;
 }

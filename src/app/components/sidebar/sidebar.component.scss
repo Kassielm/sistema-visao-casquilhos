@@ -1,25 +1,16 @@
 .sidebar {
   min-height: 100vh;
   padding: 20px;
-  position: fixed;
   top: 0;
   left: 0;
   text-align: center;
-  border-right: 1px solid #dee2e6;
+  border-right: 1px solid #aeb2b4;
+  background-color: #eef0f3;
   transition: width 0.3s ease;
 }
 
 .sidebar img {
-  width: 210px;
+  width: 260px;
   height: auto;
   margin-bottom: 15px;
-}
-
-.nav-link {
-  cursor: pointer;
-}
-
-.nav-link.active {
-  font-weight: bold;
-  color: #007bff;
 }

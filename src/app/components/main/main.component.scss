@@ -10,12 +10,28 @@ body {
   position: relative; /* Ajuda a conter a imagem rotacionada */
 }
 
+.message {
+  background-color: #eef0f3;
+  padding-bottom: 20px;
+  padding-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
 img {
   max-width: auto;
-  max-height: 1200px;
+  max-height: 1100px;
   margin-top: -120px;
-  margin-left: 170px;
+  margin-left: 220px;
   transform: rotate(90deg);
   display: block; /* Remove espaços indesejados abaixo da imagem */
   object-fit: contain; /* Garante que a imagem se ajuste ao espaço disponível */
+}
+
+.text-green {
+  color: green;
+}
+
+.text-red {
+  color: red;
 }

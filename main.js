@@ -111,6 +111,10 @@ appServer.post("/capture", (req, res) => {
   win.webContents.send("trigger-capture", req.body);
 });
 
+appServer.post("/message", (req, res) => {
+  win.webContents.send("message", req.body);
+})
+
 ipcMain.handle("capture-page", async (event, rect) => {
   try {
     const image = await win.webContents.capturePage(rect);

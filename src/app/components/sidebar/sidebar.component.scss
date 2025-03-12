@@ -10,7 +10,7 @@
 }
 
 .sidebar img {
-  width: 140px;
+  width: 210px;
   height: auto;
   margin-bottom: 15px;
 }
@@ -22,16 +22,4 @@
 .nav-link.active {
   font-weight: bold;
   color: #007bff;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 80px;
-  }
-  .sidebar h4 {
-    font-size: 1rem;
-  }
-  .sidebar img {
-    width: 60px;
-  }
 }

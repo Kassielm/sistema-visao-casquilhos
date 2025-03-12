@@ -3,7 +3,8 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("electron", {
     capturePage: (rect) => ipcRenderer.invoke("capture-page", rect),
     onTriggerCapture: (callback) => ipcRenderer.on("trigger-capture", callback),
-    sendCaptureResponse: (response) => ipcRenderer.send("capture-response", response)
+    sendCaptureResponse: (response) => ipcRenderer.send("capture-response", response),
+    onTriggerMessage: (callback) => ipcRenderer.on("message", callback)
 });
 
 window.addEventListener("DOMContentLoaded", () => {

@@ -112,7 +112,12 @@ appServer.post("/capture", (req, res) => {
 });
 
 appServer.post("/message", (req, res) => {
-  win.webContents.send("message", req.body);
+  try {
+    win.webContents.send("message", req.body);
+    return res.status(202).send({ok: "ok"});
+  } catch {
+    return res.status(500).send({error: "Error ao identificar leitura"});
+  }
 })
 
 ipcMain.handle("capture-page", async (event, rect) => {

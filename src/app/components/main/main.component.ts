@@ -31,17 +31,21 @@ declare global {
 })
 export class MainComponent implements OnInit {
   statusText: string = 'Status Inspeção';
+  matricula!: string;
 
   constructor(private zone: NgZone) {}
 
   ngOnInit() {
     // fica escutando o evento de captura
     window.electron.onTriggerCapture((event: any, data: any) => {
+      this.matricula = data.matricula;
       this.captureIframe();
       this.changeMessage(data.status);
     })
-    window.electron.onTriggerMessage((event: any, response: any) => {
-      console.log(response)
+    window.electron.onTriggerMessage((event: any, data: any) => {
+      if (data.leitura) {
+        this.changeMessage("Leitura do código realizada");
+      }
     })
   }
 
@@ -58,9 +62,9 @@ export class MainComponent implements OnInit {
       if (!iframe) {
         throw new Error('Iframe não encontrado');
       }
-      const recort = { x: 230, y: 122, width: 1145, height: 664 };
+      const recort = { x: 300, y: 144, width: 1087, height: 654 };
       const imgData = await window.electron.capturePage(recort);
-      const fileName = `${Date.now()}.png`;
+      const fileName = `${this.matricula}_${Date.now()}.png`;
       window.electron.sendCaptureResponse({ fileName, imgData });
     } catch (err: any) {
       window.electron.sendCaptureResponse({

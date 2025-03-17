@@ -5,14 +5,14 @@ body {
 }
 
 .main {
-  height: 1075px;
+  height: 1080px;
   overflow: hidden; /* Remove a barra de scroll */
   position: relative; /* Ajuda a conter a imagem rotacionada */
 }
 
 .message {
   background-color: #eef0f3;
-  padding-bottom: 20px;
+  padding-bottom: 25px;
   padding-top: 20px;
   width: 100%;
   text-align: center;
@@ -20,9 +20,9 @@ body {
 
 img {
   max-width: auto;
-  max-height: 1550px;
-  margin-top: -258px;
-  margin-left: 256px;
+  max-height: 1485px;
+  margin-top: -246px;
+  margin-left: 245px;
   transform: rotate(90deg);
   display: block; /* Remove espaços indesejados abaixo da imagem */
   object-fit: contain; /* Garante que a imagem se ajuste ao espaço disponível */

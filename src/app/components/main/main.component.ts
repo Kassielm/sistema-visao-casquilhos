@@ -44,6 +44,7 @@ export class MainComponent implements OnInit {
     })
     window.electron.onTriggerMessage((event: any, data: any) => {
       if (data.leitura) {
+        console.log(data);
         this.changeMessage("Leitura do código realizada");
       }
     })
@@ -52,7 +53,6 @@ export class MainComponent implements OnInit {
   changeMessage(text: string) {
     this.zone.run(() => {
       this.statusText = text;
-      console.log(this.statusText)
     })
   }
 

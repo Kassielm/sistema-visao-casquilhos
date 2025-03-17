@@ -94,11 +94,11 @@ appServer.post("/capture", (req, res) => {
       return res.status(500).send(response.error);
     }
     const { imgData, fileName } = response;
-    try {
+    if (plcData.salvar_dados === true) {
       const result = await saveImage(fileName, imgData, plcData);
       return res.status(202).send(result);
-    } catch (error) {
-      return res.status(500).send("Erro ao salvar imagem");
+    } else {
+      return res.status(400).send({error: 'Inspeção Nok'});
     }
   });
   win.webContents.send("trigger-capture", req.body);

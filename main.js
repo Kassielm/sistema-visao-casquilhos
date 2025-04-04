@@ -113,6 +113,15 @@ appServer.post("/message", (req, res) => {
   }
 })
 
+appServer.post("/status-lora", (req, res) => {
+  try {
+    win.webContents.send("status-lora", req.body);
+    return res.status(202).send({ok: "ok"});
+  } catch {
+    return res.status(500).send({error: "Error ao identificar o status"});
+  }
+})
+
 ipcMain.handle("capture-page", async (event, rect) => {
   try {
     const image = await win.webContents.capturePage(rect);

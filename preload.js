@@ -5,7 +5,7 @@ contextBridge.exposeInMainWorld("electron", {
     onTriggerCapture: (callback) => ipcRenderer.on("trigger-capture", callback),
     sendCaptureResponse: (response) => ipcRenderer.send("capture-response", response),
     onTriggerMessage: (callback) => ipcRenderer.on("message", callback),
-    onTriggerStatuslora: (callback) => ipcRenderer.on("status-lora", callback)
+    onTriggerStatusLora: (callback) => ipcRenderer.on("status-lora", callback)
 });
 
 window.addEventListener("DOMContentLoaded", () => {

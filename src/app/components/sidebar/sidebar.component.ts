@@ -1,9 +1,10 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
@@ -13,10 +14,23 @@ export class SidebarComponent implements OnInit {
   desenho!: string;
   transpalet!: string;
   receita!: string;
+  data = new Date();
 
-  constructor(private zone: NgZone) {}
+  constructor() {
+    setInterval(() => {
+      this.data = new Date();
+    }, 1000);
+  }
 
   ngOnInit() {
+    window.electron.onTriggerCapture((event: any, data: any) => {
+      if (data.salvar_dados) {
+        this.matricula = '';
+        this.desenho = '';
+        this.transpalet = '';
+        this.receita = 'Sem Receita';
+      }}
+    )
     window.electron.onTriggerMessage((event: any, data: any) => {
       this.matricula = data.matricula;
       this.desenho = data.desenho;

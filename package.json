@@ -1,11 +1,31 @@
 {
-  "name": "electron-angular-capture",
+  "name": "sistema-visao-casquilhos",
+  "description": "Sistema de Visão Casquilhos",
   "main": "main.js",
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "author": "Conecsa Automação e Ti",
+  "license": "GPL-3.0-only",
+  "publisher": "Conecsa automação e Ti",
+  "icon": "./favicon.ico",
+  "build": {
+    "asar": true,
+    "asarUnpack": [
+      "dist/sistema-visao-casquilhos/**/*"
+    ],
+    "files": [
+      "dist/sistema-visao-casquilhos/**/*",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ]
+  },
+  "win": {
+    "icon": "favicon.ico"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --base-href ./ && electron-builder",
     "electron": "electron-builder",
     "start:electron": "ng build && electron ."
   },
